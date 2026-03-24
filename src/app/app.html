@@ -1,46 +1,90 @@
-<style>
-  :host {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  }
-
-  .container {
-    text-align: center;
-    padding: 2rem;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  }
-
-  h1 {
-    font-size: 3rem;
-    color: #333;
-    margin: 0;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-  }
-
-  p {
-    font-size: 1.2rem;
-    color: #666;
-    margin-top: 1rem;
-  }
-</style>
-
-<main>
-  <div class="container">
-    <h1>Can you see me?</h1>
-    <p>{{ title() }} is working! 🚀</p>
+<!-- START SCREEN -->
+@if (screen() === 'start') {
+  <div class="screen start-screen" (click)="goSelect()" (keydown.enter)="goSelect()" tabindex="0">
+    <div class="start-content">
+      <div class="logo-area">
+        <img src="reactive-logo.png" alt="Reactive" class="game-logo" onerror="this.style.display='none'" />
+      </div>
+      <h1 class="game-title">REACTIVE<br><span class="title-accent">ADVENTURE</span></h1>
+      <p class="game-sub">25 Years of Business Agility</p>
+      <div class="start-tagline">
+        <span>Run the compliance gauntlet.</span>
+        <span>Dodge audits.</span>
+        <span>Throw staplers.</span>
+      </div>
+      <div class="enemy-preview">
+        <div class="ep-item">💻 Laptops</div>
+        <div class="ep-item">😤 Colleagues</div>
+        <div class="ep-item">🖨️ Printer Jams</div>
+        <div class="ep-item">📋 Audit Alerts</div>
+      </div>
+      <p class="click-start blink">CLICK ANYWHERE TO START</p>
+    </div>
   </div>
-</main>
+}
 
+<!-- CHARACTER SELECT -->
+@if (screen() === 'select') {
+  <div class="screen select-screen">
+    <div class="select-header">
+      <h1 class="select-title">CHOOSE YOUR ACCOUNTANT</h1>
+      <p class="select-sub">Each has a unique ability to survive the office</p>
+    </div>
+    <div class="char-grid">
+      @for (c of characters; track c.type) {
+        <div class="char-card"
+             [style.--ccolor]="c.color"
+             (click)="selectChar(c.type)"
+             tabindex="0" (keydown.enter)="selectChar(c.type)">
+          <div class="card-banner" [style.background]="c.color">
+            <span class="card-emoji">{{ c.emoji }}</span>
+            <span class="card-name">{{ c.name }}</span>
+          </div>
+          <div class="card-body">
+            <p class="card-desc">{{ c.description }}</p>
+            <div class="ability-box" [style.border-color]="c.color">
+              <div class="ability-title" [style.color]="c.color">⚡ {{ c.ability }}</div>
+              <div class="ability-desc">{{ c.abilityDesc }}</div>
+            </div>
+            <div class="stats-grid">
+              <div class="stat"><span>Speed</span><span class="stars" [style.color]="c.color">{{ stars(c.stats.speed) }}</span></div>
+              <div class="stat"><span>Jump</span><span class="stars" [style.color]="c.color">{{ stars(c.stats.jump) }}</span></div>
+              <div class="stat"><span>Power</span><span class="stars" [style.color]="c.color">{{ stars(c.stats.power) }}</span></div>
+            </div>
+          </div>
+          <button class="select-btn" [style.background]="c.color">SELECT</button>
+        </div>
+      }
+    </div>
+    <div class="controls-hint">
+      <span>🎮 SPACE/W: Jump</span>
+      <span>📎 Z: Throw Stapler</span>
+      <span>⚡ X: Special Ability</span>
+    </div>
+  </div>
+}
 
+<!-- GAME -->
+@if (screen() === 'play') {
+  <div class="screen game-screen">
+    <app-game [characterType]="selectedType()" (gameOver)="onGameOver($event)" />
+  </div>
+}
+
+<!-- GAME OVER -->
+@if (screen() === 'gameover') {
+  <div class="screen gameover-screen">
+    <div class="gameover-box">
+      <h1 class="go-title">COMPLIANCE FAILED</h1>
+      <p class="go-sub">The audit got you. Better luck next quarter.</p>
+      <div class="score-card">
+        <div class="score-label">FINAL SCORE</div>
+        <div class="score-value">{{ finalScore() }}</div>
+      </div>
+      <div class="go-buttons">
+        <button class="btn-primary" (click)="playAgain()">▶ PLAY AGAIN</button>
+        <button class="btn-secondary" (click)="changeChar()">↩ CHANGE ACCOUNTANT</button>
+      </div>
+    </div>
+  </div>
+}

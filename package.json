@@ -5,10 +5,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:prod": "ng build --configuration production --base-href=\"/angular-web-stub/\"",
+    "build:prod": "ng build --configuration production --base-href=\"/active-adventure-game-offsite26/\"",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng build --configuration production --base-href=\"/angular-web-stub/\" && npx angular-cli-ghpages --dir=dist/angular-web-stub/browser"
+    "deploy": "ng build --configuration production --base-href=\"/active-adventure-game-offsite26/\" && npx angular-cli-ghpages --dir=dist/angular-web-stub/browser"
   },
   "prettier": {
     "overrides": [
